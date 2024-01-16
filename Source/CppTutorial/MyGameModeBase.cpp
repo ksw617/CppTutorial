@@ -6,7 +6,7 @@
 
 AMyGameModeBase::AMyGameModeBase()
 {
-	static ConstructorHelpers::FClassFinder<AMyCharacter> BP_Character(TEXT("/Script/Engine.Blueprint'/Game/BP_MyCharacter.BP_MyCharacter_C'"));
+	static ConstructorHelpers::FClassFinder<AMyCharacter> BP_Character(TEXT("/Script/Engine.Blueprint'/Game/Blueprints/BP_MyCharacter.BP_MyCharacter_C'"));
 
 	if (BP_Character.Succeeded())
 	{
