@@ -3,6 +3,7 @@
 
 #include "MyAnimInstance.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Kismet/KismetMathLibrary.h"
 
 #include "MyCharacter.h"
 
@@ -21,7 +22,6 @@ void UMyAnimInstance::NativeBeginPlay()
 		if (IsValid(MyCharacter))
 		{
 			CharacterMovement = MyCharacter->GetCharacterMovement();
-			UE_LOG(LogTemp, Log, TEXT("CharacterMovement IsValid"));
 		}
 	}
 }
@@ -31,16 +31,26 @@ void UMyAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	Super::NativeUpdateAnimation(DeltaSeconds);
 	if (IsValid(MyCharacter))
 	{
-		FVector Velocity = CharacterMovement->Velocity;
+		Velocity = CharacterMovement->Velocity;
 		FRotator Rotation = MyCharacter->GetActorRotation();
 		FVector UnRotateVector = Rotation.UnrotateVector(Velocity);
-		
+		//UnRotateVector = UnRotateVector.GetSafeNormal();
+		UnRotateVector.Normalize();
 		Vertical = UnRotateVector.X;
 		Horizontal = UnRotateVector.Y;
 		Speed = Velocity.Size2D();
 
 		auto Acceleration = CharacterMovement->GetCurrentAcceleration();
 		ShouldMove = Speed > 3.f && Acceleration != FVector::Zero();
+		IsFalling = CharacterMovement->IsFalling();
+
+		FRotator BaseAimRotation = MyCharacter->GetBaseAimRotation();
+		FRotator VelocityRotation = UKismetMathLibrary::MakeRotFromX(Velocity);
+
+		FRotator DeltaRotation = VelocityRotation - BaseAimRotation;
+		DeltaRotation.Normalize();
+
+		YawOffset = DeltaRotation.Yaw;
 
 	}
 
