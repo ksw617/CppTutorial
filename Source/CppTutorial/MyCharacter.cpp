@@ -5,6 +5,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Camera/CameraComponent.h"
+#include "MyAnimInstance.h"
 
 // Sets default values
 AMyCharacter::AMyCharacter()
@@ -20,7 +21,8 @@ AMyCharacter::AMyCharacter()
 
 	SpringArm->TargetArmLength = 400.f;
 	SpringArm->SetRelativeRotation(FRotator(-35.f, 0.f, 0.f));
-	SpringArm->bUsePawnControlRotation = true; // 추가
+	SpringArm->SocketOffset = FVector(0.f, 120.f, 75.f);  // 추가
+	SpringArm->bUsePawnControlRotation = true; 
 
 	static ConstructorHelpers::FObjectFinder<USkeletalMesh> SkeletalMesh(TEXT("/Script/Engine.SkeletalMesh'/Game/ParagonSparrow/Characters/Heroes/Sparrow/Meshes/Sparrow.Sparrow'"));
 
@@ -30,12 +32,19 @@ AMyCharacter::AMyCharacter()
 		GetMesh()->SetRelativeLocationAndRotation(FVector(0.f, 0.f, -90.f), FRotator(0.f, -90.f, 0.f));
 	}
 
+	static ConstructorHelpers::FClassFinder<UAnimInstance> AnimInstance(TEXT("/Script/Engine.AnimBlueprint'/Game/Animation/ABP_MyCharacter.ABP_MyCharacter_C'"));
+	if (AnimInstance.Succeeded())
+	{
+		GetMesh()->SetAnimClass(AnimInstance.Class);
+	}
+
 }
 
-// Called when the game starts or when spawned
 void AMyCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+
+	MyAnimInstance = Cast<UMyAnimInstance>(GetMesh()->GetAnimInstance());
 	
 }
 
@@ -56,9 +65,8 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	PlayerInputComponent->BindAxis(TEXT("LookLeftRight"), this, &AMyCharacter::MouseLookLeftRight);
 	PlayerInputComponent->BindAxis(TEXT("LookUpDown"), this, &AMyCharacter::MouseLookUpDown);
 
-	//AMyCharacter::Jump -> ACharacter::Jump
 	PlayerInputComponent->BindAction(TEXT("Jump"), EInputEvent::IE_Pressed, this, &AMyCharacter::Jump);
-
+	PlayerInputComponent->BindAction(TEXT("Fire"), EInputEvent::IE_Pressed, this, &AMyCharacter::Fire);
 }
 
 void AMyCharacter::KeyUpDown(float value)
@@ -79,5 +87,14 @@ void AMyCharacter::MouseLookLeftRight(float value)
 void AMyCharacter::MouseLookUpDown(float value)
 {
 	AddControllerPitchInput(value);
+}
+
+void AMyCharacter::Fire()
+{
+	if (IsValid(MyAnimInstance))
+	{
+		MyAnimInstance->PlayFireMontage();
+	}
+
 }
 

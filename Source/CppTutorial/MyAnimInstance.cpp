@@ -7,9 +7,20 @@
 
 #include "MyCharacter.h"
 
-void UMyAnimInstance::NativeInitializeAnimation()
+//void UMyAnimInstance::NativeInitializeAnimation()
+//{
+//	Super::NativeInitializeAnimation();
+//
+//
+//}
+
+UMyAnimInstance::UMyAnimInstance()
 {
-	Super::NativeInitializeAnimation();
+	ConstructorHelpers::FObjectFinder<UAnimMontage> AnimMontage(TEXT("/Script/Engine.AnimMontage'/Game/ParagonSparrow/Characters/Heroes/Sparrow/Animations/Primary_Fire_Med_Montage.Primary_Fire_Med_Montage'"));
+	if (AnimMontage.Succeeded())
+	{
+		FireMontage = AnimMontage.Object;
+	}
 }
 
 void UMyAnimInstance::NativeBeginPlay()
@@ -33,21 +44,16 @@ void UMyAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	{
 		Velocity = CharacterMovement->Velocity;
 		FRotator Rotation = MyCharacter->GetActorRotation();
-		FVector UnRotateVector = Rotation.UnrotateVector(Velocity);
-		//UnRotateVector = UnRotateVector.GetSafeNormal();
-		UnRotateVector.Normalize();
-		Vertical = UnRotateVector.X;
-		Horizontal = UnRotateVector.Y;
 		Speed = Velocity.Size2D();
 
 		auto Acceleration = CharacterMovement->GetCurrentAcceleration();
 		ShouldMove = Speed > 3.f && Acceleration != FVector::Zero();
 		IsFalling = CharacterMovement->IsFalling();
 
-		FRotator BaseAimRotation = MyCharacter->GetBaseAimRotation();
+		AimRotation = MyCharacter->GetBaseAimRotation();
 		FRotator VelocityRotation = UKismetMathLibrary::MakeRotFromX(Velocity);
 
-		FRotator DeltaRotation = VelocityRotation - BaseAimRotation;
+		FRotator DeltaRotation = VelocityRotation - AimRotation;
 		DeltaRotation.Normalize();
 
 		YawOffset = DeltaRotation.Yaw;
@@ -55,4 +61,15 @@ void UMyAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	}
 
 
+}
+
+void UMyAnimInstance::PlayFireMontage()
+{
+	if (IsValid(FireMontage))
+	{
+		if (!Montage_IsPlaying(FireMontage))
+		{
+			Montage_Play(FireMontage);
+		}
+	}
 }

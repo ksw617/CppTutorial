@@ -17,10 +17,6 @@ private:
 	UPROPERTY(Category = "Animation", EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
 	float Speed;
 	UPROPERTY(Category = "Animation", EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
-	float Horizontal;
-	UPROPERTY(Category = "Animation", EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
-	float Vertical;
-	UPROPERTY(Category = "Animation", EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
 	bool ShouldMove;
 	UPROPERTY(Category = "Animation", EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
 	bool IsFalling;
@@ -28,18 +24,25 @@ private:
 	FVector Velocity;
 	UPROPERTY(Category = "Animation", EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
 	float YawOffset;
+	UPROPERTY(Category = "Animation", EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
+	FRotator AimRotation;
 
 private:
 	UPROPERTY(VisibleAnywhere)
 	class AMyCharacter* MyCharacter;
 	UPROPERTY(VisibleAnywhere)
 	class UCharacterMovementComponent* CharacterMovement;
-
+	UPROPERTY(VisibleAnywhere)
+	UAnimMontage* FireMontage;
 
 public:
-	virtual void NativeInitializeAnimation() override;
+	UMyAnimInstance();
+public:
+	//virtual void NativeInitializeAnimation() override;
 	virtual void NativeBeginPlay() override;
 	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
+public:
+	void PlayFireMontage(); // 몽타지 play해줄 함수
 
 	
 };
