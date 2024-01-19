@@ -26,6 +26,8 @@ private:
 	float YawOffset;
 	UPROPERTY(Category = "Animation", EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
 	FRotator AimRotation;
+	UPROPERTY(Category = "Animation", EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
+	float RotateYaw;
 
 private:
 	UPROPERTY(VisibleAnywhere)
@@ -38,11 +40,10 @@ private:
 public:
 	UMyAnimInstance();
 public:
-	//virtual void NativeInitializeAnimation() override;
 	virtual void NativeBeginPlay() override;
 	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
 public:
-	void PlayFireMontage(); // 몽타지 play해줄 함수
+	void PlayFireMontage();
 
 	
 };
