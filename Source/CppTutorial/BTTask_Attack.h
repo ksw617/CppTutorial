@@ -13,10 +13,6 @@ UCLASS()
 class CPPTUTORIAL_API UBTTask_Attack : public UBTTaskNode
 {
 	GENERATED_BODY()
-private:
-	bool IsAttacking = false;
-public:
-	void SetIsAttacking(bool value) { IsAttacking = false; }
 public:
 	UBTTask_Attack();
 public:

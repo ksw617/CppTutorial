@@ -36,6 +36,9 @@ AMyEnemy::AMyEnemy()
 void AMyEnemy::BeginPlay()
 {
 	Super::BeginPlay();
+
+	EnemyAnimInstace = Cast<UEnemyAnimInstance>(GetMesh()->GetAnimInstance());
+	EnemyAnimInstace->OnMontageEnded.AddDynamic(this, &AMyEnemy::OnAttackMontageEnded);
 	
 }
 
@@ -55,10 +58,20 @@ void AMyEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 void AMyEnemy::Attack()
 {
-	auto EnemyAnimInstace = Cast<UEnemyAnimInstance>(GetMesh()->GetAnimInstance());
-	if (IsValid(EnemyAnimInstace))
+	if (!IsAttacking)
 	{
-		EnemyAnimInstace->PlayAttackMontage();
+		IsAttacking = true;
+
+		if (IsValid(EnemyAnimInstace))
+		{
+			EnemyAnimInstace->PlayAttackMontage();
+		}
+
 	}
+}
+
+void AMyEnemy::OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted)
+{
+	IsAttacking = false;
 }
 

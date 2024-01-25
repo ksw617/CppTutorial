@@ -10,7 +10,12 @@ UCLASS()
 class CPPTUTORIAL_API AMyEnemy : public ACharacter
 {
 	GENERATED_BODY()
-
+private:
+	bool IsAttacking = false;
+	UPROPERTY(VisibleAnywhere)
+	class UEnemyAnimInstance* EnemyAnimInstace;
+public:
+	bool GetIsAttacking() const { return IsAttacking; }
 public:
 	// Sets default values for this character's properties
 	AMyEnemy();
@@ -25,7 +30,9 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+
 public:
 	void Attack();
-
+	UFUNCTION()
+	void OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted);
 };
