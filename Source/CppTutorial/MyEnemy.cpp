@@ -6,6 +6,7 @@
 #include "MyAIController.h"
 #include "EnemyAnimInstance.h"
 
+
 // Sets default values
 AMyEnemy::AMyEnemy()
 {

@@ -2,11 +2,13 @@
 
 
 #include "MyActorComponent.h"
+#include "MyGameInstance.h"	//UMyGameInstance 사용하기 위해
+#include "Kismet/GameplayStatics.h" //UGameplayStatics 사용하기 위해
 
 UMyActorComponent::UMyActorComponent()
 {
 	PrimaryComponentTick.bCanEverTick = false;
-	bWantsInitializeComponent = true; //   InitializeComponent 호출 가능
+	bWantsInitializeComponent = true; 
 	Level = 1;
 
 }
@@ -20,16 +22,35 @@ void UMyActorComponent::InitializeComponent()
 void UMyActorComponent::BeginPlay()
 {
 	Super::BeginPlay();
-	UE_LOG(LogTemp, Log, TEXT("ActorComponent"));
+
 }
 
 void UMyActorComponent::SetLevel(int32 Lv)
 {
-	//Todo
+
+	auto MyGameInstance = Cast<UMyGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+	if (MyGameInstance)
+	{
+		auto CharacterData = MyGameInstance->GetCharacterData(Lv);
+		if (CharacterData)
+		{
+			Level = CharacterData->Level;
+			MaxHp = CharacterData->MaxHp;
+			Hp = MaxHp;
+
+			UE_LOG(LogTemp, Log, TEXT("Lv : %d"), Level);
+			UE_LOG(LogTemp, Log, TEXT("HP : %d"), Hp);
+		}
+	}
 }
 
 void UMyActorComponent::OnDamaged(float DamageAmount)
 {
-	//Todo
+	Hp -= DamageAmount;
+	if (Hp < 0)
+	{
+		Hp = 0;
+	}
+	UE_LOG(LogTemp, Warning, TEXT("HP : %d"), Hp);
 }
 

@@ -4,10 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "Creature.h"
 #include "MyEnemy.generated.h"
 
 UCLASS()
-class CPPTUTORIAL_API AMyEnemy : public ACharacter
+class CPPTUTORIAL_API AMyEnemy : public ACreature
 {
 	GENERATED_BODY()
 private:
