@@ -4,10 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "Creature.h"
 #include "MyCharacter.generated.h"
 
 UCLASS()
-class CPPTUTORIAL_API AMyCharacter : public ACharacter
+class CPPTUTORIAL_API AMyCharacter : public ACreature
 {
 	GENERATED_BODY()
 private:
@@ -15,12 +16,6 @@ private:
 	class USpringArmComponent* SpringArm;
 	UPROPERTY(VisibleAnywhere)
 	class UCameraComponent* Camera;
-	UPROPERTY(VisibleAnywhere)
-	class UMyAnimInstance* MyAnimInstance;
-	UPROPERTY(VisibleAnywhere)
-	class UMyActorComponent* MyActorComponent;
-
-
 
 public:
 	AMyCharacter();
@@ -36,6 +31,6 @@ public:
 	void KeyLeftRight(float value);
 	void MouseLookLeftRight(float value);
 	void MouseLookUpDown(float value);
-	void Fire();
+    virtual	void Attack() override;
 
 };

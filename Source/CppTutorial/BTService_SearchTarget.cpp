@@ -41,11 +41,11 @@ void UBTService_SearchTarget::TickNode(UBehaviorTreeComponent& OwnerComp, uint8*
 			{
 				for (auto& OverlapResult : OverlapResults)
 				{
-					AMyCharacter* MyCharacter = Cast<AMyCharacter>(OverlapResult.GetActor());
-					if (MyCharacter)
+					AMyCharacter* Character = Cast<AMyCharacter>(OverlapResult.GetActor());
+					if (Character)
 					{
 						DrawDebugSphere(World, Center, SearchDistance, 10, FColor::Green, false, 0.5f);
-						OwnerComp.GetBlackboardComponent()->SetValueAsObject(FName("Target"), MyCharacter);
+						OwnerComp.GetBlackboardComponent()->SetValueAsObject(FName("Target"), Character);
 						return;
 					}
 				}

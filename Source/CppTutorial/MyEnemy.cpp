@@ -23,6 +23,7 @@ AMyEnemy::AMyEnemy()
 		GetMesh()->SetRelativeLocationAndRotation(FVector(0.f, 0.f, -90.f), FRotator(0.f, -90.f, 0.f));
 	}
 
+
 	static ConstructorHelpers::FClassFinder<UAnimInstance> AI(TEXT("/Script/Engine.AnimBlueprint'/Game/Animation/ABP_Enemy.ABP_Enemy_C'"));
 	if (AI.Succeeded())
 	{
@@ -38,8 +39,7 @@ void AMyEnemy::BeginPlay()
 {
 	Super::BeginPlay();
 
-	EnemyAnimInstace = Cast<UEnemyAnimInstance>(GetMesh()->GetAnimInstance());
-	EnemyAnimInstace->OnMontageEnded.AddDynamic(this, &AMyEnemy::OnAttackMontageEnded);
+	
 	
 }
 
@@ -55,24 +55,5 @@ void AMyEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
-}
-
-void AMyEnemy::Attack()
-{
-	if (!IsAttacking)
-	{
-		IsAttacking = true;
-
-		if (IsValid(EnemyAnimInstace))
-		{
-			EnemyAnimInstace->PlayAttackMontage();
-		}
-
-	}
-}
-
-void AMyEnemy::OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted)
-{
-	IsAttacking = false;
 }
 

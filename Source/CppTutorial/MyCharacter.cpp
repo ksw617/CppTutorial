@@ -42,15 +42,12 @@ AMyCharacter::AMyCharacter()
 		GetMesh()->SetAnimClass(AnimInstance.Class);
 	}
 
-	MyActorComponent = CreateDefaultSubobject<UMyActorComponent>(TEXT("MyActorComponent"));
 }
 
 void AMyCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-	MyAnimInstance = Cast<UMyAnimInstance>(GetMesh()->GetAnimInstance());
-	
 }
 
 // Called every frame
@@ -71,7 +68,7 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	PlayerInputComponent->BindAxis(TEXT("LookUpDown"), this, &AMyCharacter::MouseLookUpDown);
 
 	PlayerInputComponent->BindAction(TEXT("Jump"), EInputEvent::IE_Pressed, this, &AMyCharacter::Jump);
-	PlayerInputComponent->BindAction(TEXT("Fire"), EInputEvent::IE_Pressed, this, &AMyCharacter::Fire);
+	PlayerInputComponent->BindAction(TEXT("Fire"), EInputEvent::IE_Pressed, this, &AMyCharacter::Attack);
 }
 
 void AMyCharacter::KeyUpDown(float value)
@@ -94,11 +91,12 @@ void AMyCharacter::MouseLookUpDown(float value)
 	AddControllerPitchInput(value);
 }
 
-void AMyCharacter::Fire()
+void AMyCharacter::Attack()
 {
-	if (IsValid(MyAnimInstance))
+	Super::Attack();
+
+	if (IsValid(CreatureAnimInstance))
 	{
-		MyAnimInstance->PlayFireMontage();
 		FTransform SocketTransform = GetMesh()->GetSocketTransform(FName("ArrowSocket"));
 		FVector SocketLocation = SocketTransform.GetLocation();
 		FRotator SocketRotation = SocketTransform.GetRotation().Rotator();

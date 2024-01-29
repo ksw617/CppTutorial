@@ -11,10 +11,7 @@ UCLASS()
 class CPPTUTORIAL_API AMyEnemy : public ACreature
 {
 	GENERATED_BODY()
-private:
-	bool IsAttacking = false;
-	UPROPERTY(VisibleAnywhere)
-	class UEnemyAnimInstance* EnemyAnimInstace;
+
 public:
 	bool GetIsAttacking() const { return IsAttacking; }
 public:
@@ -30,10 +27,4 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
-
-public:
-	void Attack();
-	UFUNCTION()
-	void OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted);
 };

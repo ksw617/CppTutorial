@@ -4,24 +4,19 @@
 
 #include "CoreMinimal.h"
 #include "Animation/AnimInstance.h"
+#include "CreatureAnim.h"
 #include "MyAnimInstance.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class CPPTUTORIAL_API UMyAnimInstance : public UAnimInstance
+class CPPTUTORIAL_API UMyAnimInstance : public UCreatureAnim
 {
 	GENERATED_BODY()
 private:
 	UPROPERTY(Category = "Animation", EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
-	float Speed;
-	UPROPERTY(Category = "Animation", EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
-	bool ShouldMove;
-	UPROPERTY(Category = "Animation", EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
 	bool IsFalling;
-	UPROPERTY(Category = "Animation", EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
-	FVector Velocity;
 	UPROPERTY(Category = "Animation", EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
 	float YawOffset;
 	UPROPERTY(Category = "Animation", EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
@@ -39,21 +34,12 @@ private:
 	UPROPERTY(Category = "Animation", EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
 	float DeltaDistanceCurve;
 
-private:
-	UPROPERTY(VisibleAnywhere)
-	class AMyCharacter* MyCharacter;
-	UPROPERTY(VisibleAnywhere)
-	class UCharacterMovementComponent* CharacterMovement;
-	UPROPERTY(VisibleAnywhere)
-	UAnimMontage* FireMontage;
 
 public:
 	UMyAnimInstance();
 public:
-	virtual void NativeBeginPlay() override;
 	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
-public:
-	void PlayFireMontage();
+
 
 	
 };
