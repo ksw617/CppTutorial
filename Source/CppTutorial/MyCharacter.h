@@ -31,6 +31,8 @@ public:
 	void KeyLeftRight(float value);
 	void MouseLookLeftRight(float value);
 	void MouseLookUpDown(float value);
-    virtual	void Attack() override;
+public:
+	virtual	void Attack() override;
+	virtual void OnHit() override;
 
 };

@@ -6,7 +6,6 @@
 #include "Components/ActorComponent.h"
 #include "MyActorComponent.generated.h"
 
-
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class CPPTUTORIAL_API UMyActorComponent : public UActorComponent
 {
@@ -30,6 +29,8 @@ protected:
 public:
 	void SetLevel(int32 Lv);
 	void OnDamaged(float DamageAmount);
+	void SetHp(int32 NewHp);
+	float GetHpRatio();
 
 
 };

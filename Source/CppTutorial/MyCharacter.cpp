@@ -95,6 +95,12 @@ void AMyCharacter::Attack()
 {
 	Super::Attack();
 
+}
+
+void AMyCharacter::OnHit()
+{
+	Super::OnHit();
+
 	if (IsValid(CreatureAnimInstance))
 	{
 		FTransform SocketTransform = GetMesh()->GetSocketTransform(FName("ArrowSocket"));
@@ -106,6 +112,5 @@ void AMyCharacter::Attack()
 
 		auto MyArrow = GetWorld()->SpawnActor<AArrow>(SocketLocation, SocketRotation, params);
 	}
-
 }
 

@@ -17,6 +17,8 @@ protected:
 	class UMyActorComponent* MyActorComponent;
 	UPROPERTY(VisibleAnywhere)
 	class UCreatureAnim* CreatureAnimInstance;
+	UPROPERTY(VisibleAnywhere)
+	class UWidgetComponent* HpBar;
 
 
 public:
@@ -27,10 +29,9 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 public:
-	UFUNCTION()
-	void OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted);
-	UFUNCTION()
+	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
+public:
+	virtual void OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted);
 	virtual void Attack();
-	UFUNCTION()
-	void OnHit();
+	virtual void OnHit() {};
 };
