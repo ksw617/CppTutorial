@@ -3,8 +3,8 @@
 
 #include "BTService_SearchTarget.h"
 #include "MyAIController.h"
-#include "MyCharacter.h"
 #include "BehaviorTree/BlackboardComponent.h"
+#include "MyPlayer.h"
 
 UBTService_SearchTarget::UBTService_SearchTarget()
 {
@@ -41,7 +41,7 @@ void UBTService_SearchTarget::TickNode(UBehaviorTreeComponent& OwnerComp, uint8*
 			{
 				for (auto& OverlapResult : OverlapResults)
 				{
-					AMyCharacter* Character = Cast<AMyCharacter>(OverlapResult.GetActor());
+					AMyPlayer* Character = Cast<AMyPlayer>(OverlapResult.GetActor());
 					if (Character)
 					{
 						DrawDebugSphere(World, Center, SearchDistance, 10, FColor::Green, false, 0.5f);

@@ -4,8 +4,7 @@
 #include "MyAnimInstance.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/KismetMathLibrary.h"
-
-#include "MyCharacter.h"
+#include "MyPlayer.h"
 
 
 UMyAnimInstance::UMyAnimInstance()

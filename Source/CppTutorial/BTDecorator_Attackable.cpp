@@ -3,8 +3,8 @@
 
 #include "BTDecorator_Attackable.h"
 #include "AIController.h"
-#include "MyCharacter.h"
 #include "BehaviorTree/BlackboardComponent.h"
+#include "MyPlayer.h"
 
 UBTDecorator_Attackable::UBTDecorator_Attackable()
 {
@@ -21,7 +21,7 @@ bool UBTDecorator_Attackable::CalculateRawConditionValue(UBehaviorTreeComponent&
 		return false;
 	}
 
-	auto Target = Cast<AMyCharacter>(OwnerComp.GetBlackboardComponent()->GetValueAsObject(FName("Target")));
+	auto Target = Cast<AMyPlayer>(OwnerComp.GetBlackboardComponent()->GetValueAsObject(FName("Target")));
 	if (Target == nullptr)
 	{
 		return false;
