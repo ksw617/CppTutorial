@@ -38,6 +38,12 @@ void ACreature::BeginPlay()
 		CreatureAnimInstance->OnAttackHit.AddUObject(this, &ACreature::OnHit);
 	}
 
+	auto HpWidget = Cast<UMyUserWidget>(HpBar->GetUserWidgetObject());
+	if (HpWidget)
+	{
+		HpWidget->BindHp(MyActorComponent);
+	}
+
 }
 
 float ACreature::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
@@ -48,11 +54,13 @@ float ACreature::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent,
 
 void ACreature::OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted)
 {
+	UE_LOG(LogTemp, Log, TEXT("OnAttackMontageEnded"));
 	IsAttacking = false;
 }
 
 void ACreature::Attack()
 {
+
 	if (!IsAttacking)
 	{
 		IsAttacking = true;

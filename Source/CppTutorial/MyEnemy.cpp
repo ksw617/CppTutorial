@@ -5,7 +5,7 @@
 #include "Components/CapsuleComponent.h"
 #include "MyAIController.h"
 #include "EnemyAnimInstance.h"
-#include "Kismet/GameplayStatics.h"	   //GameplayStatics 사용하기 위해
+#include "Kismet/GameplayStatics.h"	  
 
 
 // Sets default values
@@ -89,7 +89,7 @@ void AMyEnemy::OnHit()
 		DrawColor = FColor::Green;
 
 		AActor* HitActor = HitResult.GetActor();
-		//UGameplayStatics::ApplyDamage(HitActor, 10.f, GetController(), nullptr, NULL);
+		UGameplayStatics::ApplyDamage(HitActor, 10.f, GetController(), nullptr, NULL);
 	}
 	else
 	{

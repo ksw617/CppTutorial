@@ -6,6 +6,8 @@
 #include "Components/ActorComponent.h"
 #include "MyActorComponent.generated.h"
 
+DECLARE_MULTICAST_DELEGATE(FOnHpChanged)
+
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class CPPTUTORIAL_API UMyActorComponent : public UActorComponent
 {
@@ -20,6 +22,8 @@ private:
 public:
 	int32 GetLevel() const { return Level; }
 	int32 GetHp() const { return Hp; }
+public:
+	FOnHpChanged OnHpChanged;
 public:	
 	UMyActorComponent();
 

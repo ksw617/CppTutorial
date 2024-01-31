@@ -46,6 +46,8 @@ void UMyActorComponent::OnDamaged(float DamageAmount)
 	int32 NewHP = Hp - DamageAmount;
 	SetHp(NewHP);
 
+
+
 }
 
 void UMyActorComponent::SetHp(int32 NewHp)
@@ -55,6 +57,8 @@ void UMyActorComponent::SetHp(int32 NewHp)
 	{
 		Hp = 0;
 	}
+
+	OnHpChanged.Broadcast();
 }
 
 float UMyActorComponent::GetHpRatio()
