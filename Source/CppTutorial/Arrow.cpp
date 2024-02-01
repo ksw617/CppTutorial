@@ -4,6 +4,8 @@
 #include "Arrow.h"
 #include "Components/BoxComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
+#include "Particles/ParticleSystem.h"	  
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 AArrow::AArrow()
@@ -25,20 +27,24 @@ AArrow::AArrow()
 		Mesh->SetRelativeLocationAndRotation(FVector(100.f, 0.f, 0.f), FRotator(90.f, 0.f, 0.f));
 		Mesh->SetCollisionProfileName(TEXT("NoCollision"));
 
-		CollisionMesh = CreateDefaultSubobject<UBoxComponent>(FName("Collision Mesh"));
-		CollisionMesh->SetupAttachment(Mesh);
-		CollisionMesh->SetRelativeLocation(FVector(0.f, 0.f, -55.f));
-		CollisionMesh->SetRelativeScale3D(FVector(0.2f, 0.2f, 0.2f));
+		Box = CreateDefaultSubobject<UBoxComponent>(FName("Collision Mesh"));
+		Box->SetupAttachment(Mesh);
+		Box->SetRelativeLocation(FVector(0.f, 0.f, -55.f));
+		Box->SetRelativeScale3D(FVector(0.2f, 0.2f, 0.2f));
+		Box->OnComponentBeginOverlap.AddDynamic(this, &AArrow::OnOverlapBegin);
 
 		ProjectileMovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileMovemenetComponent"));
-
 		ProjectileMovementComponent->SetUpdatedComponent(DefaultRoot);
 		ProjectileMovementComponent->InitialSpeed = 3000.f;
 		ProjectileMovementComponent->MaxSpeed = 3000.f;
 		ProjectileMovementComponent->bRotationFollowsVelocity = true;
 	}
 
-	
+	static ConstructorHelpers::FObjectFinder<UParticleSystem> PS(TEXT("/Script/Engine.ParticleSystem'/Game/ParagonSparrow/FX/Particles/Sparrow/Abilities/Primary/FX/P_Sparrow_HitHero.P_Sparrow_HitHero'"));
+	if (PS.Succeeded())
+	{
+		Particle = PS.Object;
+	}
 
 }
 
@@ -54,5 +60,26 @@ void AArrow::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+}
+
+void AArrow::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFormSweep, const FHitResult& SweepResult)
+{
+	if (OtherActor && OtherActor != this && OtherComp)
+	{
+		Box->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		if (Particle)
+		{
+			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), Particle, Box->GetComponentLocation());
+		}
+
+		ProjectileMovementComponent->StopMovementImmediately();
+		ProjectileMovementComponent->ProjectileGravityScale = 0.f;
+		this->AttachToActor(OtherActor, FAttachmentTransformRules(EAttachmentRule::KeepWorld, true));
+
+		UGameplayStatics::ApplyDamage(OtherActor, 10.f, ProjectileMovementComponent->GetOwner()->GetInstigatorController(), nullptr, NULL);
+
+		FTimerHandle TimerHandle;
+		GetWorld()->GetTimerManager().SetTimer(TimerHandle, [&]() {Destroy(); }, 3.f, false);
+	}
 }
 

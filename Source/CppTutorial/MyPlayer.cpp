@@ -8,6 +8,8 @@
 #include "MyAnimInstance.h"
 #include "Arrow.h"
 #include "MyActorComponent.h"
+#include "Kismet/GameplayStatics.h"
+#include "Camera/PlayerCameraManager.h"
 
 AMyPlayer::AMyPlayer()
 {
@@ -84,44 +86,50 @@ void AMyPlayer::Attack()
 void AMyPlayer::OnHit()
 {
 	Super::OnHit();
-	if (IsValid(CreatureAnimInstance))
-	{
-		FTransform SocketTransform = GetMesh()->GetSocketTransform(FName("ArrowSocket"));
-		FVector SocketLocation = SocketTransform.GetLocation();
-		FRotator SocketRotation = SocketTransform.GetRotation().Rotator();
-		FActorSpawnParameters params;
-		params.Owner = this;
-
-
-		auto MyArrow = GetWorld()->SpawnActor<AArrow>(SocketLocation, SocketRotation, params);
-	}
 
 	float AttackRange = 10000.f;
 
 	FHitResult HitResult;
 
-	FVector Center = GetActorLocation();
-	FVector Forward = Center + GetActorForwardVector() * AttackRange;
+	APlayerCameraManager* CamManager = UGameplayStatics::GetPlayerCameraManager(this, 0);
+
+
+	FVector AimLocation = CamManager->GetCameraLocation();
+	FVector TargetLocation = AimLocation + CamManager->GetActorForwardVector() * AttackRange;
 	FCollisionQueryParams params;
 	params.AddIgnoredActor(this);
 
 	bool Result = GetWorld()->LineTraceSingleByChannel
 	(
 		OUT HitResult,
-			Center,
-			Forward,
-			ECollisionChannel::ECC_GameTraceChannel1,
+			AimLocation,
+			TargetLocation,
+			ECollisionChannel::ECC_GameTraceChannel3,
 			params
 	);
 
 	if (Result)
 	{
-		UE_LOG(LogTemp, Log, TEXT("Hit"));
+		TargetLocation = HitResult.ImpactPoint;
+		DrawDebugLine(GetWorld(), AimLocation, TargetLocation, FColor::Green, true);
 	}
 	else
 	{
+		DrawDebugLine(GetWorld(), AimLocation, TargetLocation, FColor::Red, true);
+	}
 
-		UE_LOG(LogTemp, Log, TEXT("Not Hit"));
+
+	if (IsValid(CreatureAnimInstance))
+	{
+		FTransform SocketTransform = GetMesh()->GetSocketTransform(FName("ArrowSocket"));
+		FVector SocketLocation = SocketTransform.GetLocation();
+		FVector DeltaVector = TargetLocation - SocketLocation;
+		FRotator SocketRotation = FRotationMatrix::MakeFromX(DeltaVector).Rotator();
+		FActorSpawnParameters ArrowParams;
+		ArrowParams.Owner = this;
+		ArrowParams.Instigator = this;
+		
+		auto MyArrow = GetWorld()->SpawnActor<AArrow>(SocketLocation, SocketRotation, ArrowParams);
 	}
 
 

@@ -54,7 +54,6 @@ float ACreature::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent,
 
 void ACreature::OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted)
 {
-	UE_LOG(LogTemp, Log, TEXT("OnAttackMontageEnded"));
 	IsAttacking = false;
 }
 
