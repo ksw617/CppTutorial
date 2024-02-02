@@ -1,6 +1,7 @@
 #include "CreatureAnim.h"
 #include "GameFramework/Character.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Creature.h"
 
 void UCreatureAnim::NativeBeginPlay()
 {
@@ -8,12 +9,14 @@ void UCreatureAnim::NativeBeginPlay()
 	auto Pawn = TryGetPawnOwner();
 	if (IsValid(Pawn))
 	{
-		Character = Cast<ACharacter>(Pawn);
+		Character = Cast<ACreature>(Pawn);
 		if (IsValid(Character))
 		{
 			CharacterMovement = Character->GetCharacterMovement();
 		}
 	}
+
+	OnDeath = false;
 }
 
 void UCreatureAnim::NativeUpdateAnimation(float DeltaSeconds)
@@ -23,6 +26,11 @@ void UCreatureAnim::NativeUpdateAnimation(float DeltaSeconds)
 	{
 		Velocity = CharacterMovement->Velocity;
 		Speed = Velocity.Size2D();
+
+		if (Character->GetHp() <= 0 && !OnDeath)
+		{
+			OnDeath = true;
+		}
 	}
 }
 

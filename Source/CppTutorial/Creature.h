@@ -36,4 +36,7 @@ public:
 	virtual void Attack();
 	UFUNCTION()
 	virtual void OnHit() {};
+
+public:
+	int GetHp();
 };

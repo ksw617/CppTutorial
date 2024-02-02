@@ -21,9 +21,12 @@ protected:
 	float Speed;
 	UPROPERTY(Category = "Animation", EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
 	bool ShouldMove;
+	UPROPERTY(Category = "Animation", EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
+	bool OnDeath;
+
 public:
 	UPROPERTY(VisibleAnywhere)
-	class ACharacter* Character;
+	class ACreature* Character; //Acharacter->ACreature
 	UPROPERTY(VisibleAnywhere)
 	class UCharacterMovementComponent* CharacterMovement;
 	UPROPERTY(VisibleAnywhere)
